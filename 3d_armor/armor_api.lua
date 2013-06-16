@@ -8,12 +8,13 @@ armor_api.get_armor_textures = function(self, player)
 		return
 	end
 	local name = player:get_player_name()
+	local player_inv = player:get_inventory()
 	local textures = {
 		armor = "",
 		shield = uniskins.default_texture
 	}
 	for _,v in ipairs({"head", "torso", "legs"}) do
-		local stack = player:get_inventory():get_stack("armor_"..v, 1)
+		local stack = player_inv:get_stack("armor_"..v, 1)
 		if stack:get_definition().groups["armor_"..v] then
 			local item = stack:get_name()
 			if textures.armor ~= "" then
@@ -25,7 +26,7 @@ armor_api.get_armor_textures = function(self, player)
 	if textures.armor == "" then
 		textures.armor = uniskins.default_texture
 	end
-	local stack = player:get_inventory():get_stack("armor_shield", 1)
+	local stack = player_inv:get_stack("armor_shield", 1)
 	if stack:get_definition().groups["armor_shield"] then
 		local item = stack:get_name()
 		textures.shield = minetest.registered_items[item].inventory_image

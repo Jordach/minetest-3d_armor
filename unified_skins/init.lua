@@ -37,7 +37,7 @@ minetest.register_on_joinplayer(function(player)
 		local f = io.open(filename..".png")
 		if f then
 			f:close()
-			uniskins.skin[name] = "player_"..player:get_player_name()..".png"
+			uniskins.skin[name] = "player_"..name..".png"
 		end
 	end
 	if minetest.get_modpath("skins") then
