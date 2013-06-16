@@ -10,23 +10,21 @@ wieldview = {
 }
 
 wieldview.get_wielded_item_texture = function(self, player)
+	local texture = uniskins.default_texture
 	if not player then
-		return nil
+		return texture
 	end
 	local stack = player:get_wielded_item()
 	local item = stack:get_name()
-	if not item then
-		return nil
-	end
-	if not minetest.registered_items[item] then
-		return nil
-	end
-	local texture = minetest.registered_items[item].inventory_image
-	if texture == "" then
-		if not minetest.registered_items[item].tiles then
-			return nil	
+	if item ~= "" then
+		if minetest.registered_items[item] then
+			if minetest.registered_items[item].inventory_image ~= "" then
+				return minetest.registered_items[item].inventory_image
+			end
+			if minetest.registered_items[item].tiles ~= "" then
+				return minetest.registered_items[item].tiles[1]
+			end
 		end
-		texture = minetest.registered_items[item].tiles[1]
 	end
 	return texture
 end
@@ -45,20 +43,16 @@ wieldview.update_wielded_item = function(self, player)
 		if self.wielded_items[name] == item then
 			return
 		end
+		uniskins.wielditem[name] = self:get_wielded_item_texture(player)
 		uniskins:update_player_visuals(player)
 	end
 	self.wielded_items[name] = item
 end
 
 minetest.register_on_joinplayer(function(player)
-	local texture = uniskins:get_player_skin(name)
-	player:set_properties({
-		visual = "mesh",
-		mesh = "wieldview_character.x",
-		textures = {texture},
-		visual_size = {x=1, y=1},
-	})
+	local name = player:get_player_name()
 	minetest.after(0, function(player)
+		uniskins.wielditem[name] = wieldview:get_wielded_item_texture(player)
 		uniskins:update_player_visuals(player)
 	end, player)
 end)

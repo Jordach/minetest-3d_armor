@@ -175,7 +175,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	for field, _ in pairs(fields) do
 		if string.sub(field,0,string.len("skins_set_")) == "skins_set_" then
 			minetest.after(0, function(player)
-				armor_api:set_player_armor(player)
+				uniskins.skin[name] = skins.skins[name]..".png"
+				uniskins:update_player_visuals(player)
 			end, player)
 		end
 	end

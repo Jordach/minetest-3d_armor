@@ -8,16 +8,12 @@ A 3d character model re-texturing api used as the framework for this modpack.
 
 Compatible with player skins mod [skins] by Zeg9 and Player Textures [player_textures] by sdzen.
 
-Note: Currently only 64x32px player skins.
-
 [mod] Visible Wielded Items [wieldview]
 ---------------------------------------
 
 depends: default, unified_skins
 
 Makes hand wielded items visible to other players.
-
-Note: Currently only supports 16x16px texture packs, sorry!
 
 [mod] Visible Player Armor [3d_armor]
 -------------------------------------
