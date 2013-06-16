@@ -21,7 +21,7 @@ wieldview.get_wielded_item_texture = function(self, player)
 			if minetest.registered_items[item].inventory_image ~= "" then
 				return minetest.registered_items[item].inventory_image
 			end
-			if minetest.registered_items[item].tiles ~= "" then
+			if minetest.registered_items[item].tiles then
 				return minetest.registered_items[item].tiles[1]
 			end
 		end
