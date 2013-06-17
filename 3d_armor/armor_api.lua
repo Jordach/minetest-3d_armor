@@ -3,48 +3,38 @@ armor_api = {
 	player_hp = {},
 }
 
-armor_api.get_armor_textures = function(self, player)
+armor_api.set_player_armor = function(self, player)
 	if not player then
 		return
 	end
-	local name = player:get_player_name()
-	local player_inv = player:get_inventory()
 	local textures = {
 		armor = "",
 		shield = uniskins.default_texture
 	}
+	local name = player:get_player_name()
+	local player_inv = player:get_inventory()
+	local armor_level = 0
 	for _,v in ipairs({"head", "torso", "legs"}) do
 		local stack = player_inv:get_stack("armor_"..v, 1)
-		if stack:get_definition().groups["armor_"..v] then
+		local armor = stack:get_definition().groups["armor_"..v]
+		if armor then
 			local item = stack:get_name()
 			if textures.armor ~= "" then
 				textures.armor = textures.armor.."^"
 			end
 			textures.armor = textures.armor..item:gsub("%:", "_")..".png"
-		end
+			armor_level = armor_level + armor
+		end			
 	end
 	if textures.armor == "" then
 		textures.armor = uniskins.default_texture
 	end
 	local stack = player_inv:get_stack("armor_shield", 1)
-	if stack:get_definition().groups["armor_shield"] then
+	local shield = stack:get_definition().groups["armor_shield"]
+	if shield then
 		local item = stack:get_name()
 		textures.shield = minetest.registered_items[item].inventory_image
-	end	
-	return textures
-end
-
-armor_api.set_player_armor = function(self, player)
-	if not player then
-		return
-	end
-	local name = player:get_player_name()
-	local player_inv = player:get_inventory()
-	local armor_level = 0
-	for _,v in ipairs({"head", "torso", "legs", "shield"}) do
-		local stack = player_inv:get_stack("armor_"..v, 1)
-		local armor = stack:get_definition().groups["armor_"..v] or 0
-		armor_level = armor_level + armor
+		armor_level = armor_level + shield
 	end
 	local armor_groups = {fleshy=100}
 	if armor_level > 0 then
@@ -52,7 +42,6 @@ armor_api.set_player_armor = function(self, player)
 		armor_groups.fleshy = 100 - armor_level
 	end
 	player:set_armor_groups(armor_groups)
-	local textures = self:get_armor_textures(player)
 	uniskins.armor[name] = textures.armor
 	uniskins.shield[name] = textures.shield
 	uniskins:update_player_visuals(player)

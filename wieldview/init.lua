@@ -9,13 +9,8 @@ wieldview = {
 	wielded_items = {},
 }
 
-wieldview.get_wielded_item_texture = function(self, player)
+wieldview.get_wielded_item_texture = function(self, item)
 	local texture = uniskins.default_texture
-	if not player then
-		return texture
-	end
-	local stack = player:get_wielded_item()
-	local item = stack:get_name()
 	if item ~= "" then
 		if minetest.registered_items[item] then
 			if minetest.registered_items[item].inventory_image ~= "" then
@@ -43,7 +38,7 @@ wieldview.update_wielded_item = function(self, player)
 		if self.wielded_items[name] == item then
 			return
 		end
-		uniskins.wielditem[name] = self:get_wielded_item_texture(player)
+		uniskins.wielditem[name] = self:get_wielded_item_texture(item)
 		uniskins:update_player_visuals(player)
 	end
 	self.wielded_items[name] = item
@@ -52,8 +47,7 @@ end
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	minetest.after(0, function(player)
-		uniskins.wielditem[name] = wieldview:get_wielded_item_texture(player)
-		uniskins:update_player_visuals(player)
+		wieldview:update_wielded_item(player)
 	end, player)
 end)
 
